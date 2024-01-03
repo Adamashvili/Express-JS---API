@@ -61,7 +61,41 @@ app.post("/api/allCars", (req, res) => {
     
 })
 
-const port = 3000;
 
+// ! PATCH Method
+app.patch("/api/allCars/:id", (req, res) => {
+    const id = Number(req.params.id)
+    let carToUpdate = cars.find(item => item.id == id);
+    if(!carToUpdate) {
+        res.status(404).json({
+            status: "fail",
+            message: `Car with id ${id} not found!`
+        })
+    }
+
+    let carIndex = cars.indexOf(carToUpdate) 
+    Object.assign(carToUpdate, req.body);
+
+    cars[carIndex] = carToUpdate
+
+    fs.writeFile("./data/cars.json", JSON.stringify(cars), (err) => {
+        res.status(200).json({
+            status: "success",
+            data: {
+                cars: carToUpdate
+            }
+        })
+
+    })
+})
+
+
+
+
+
+
+
+
+const port = 3000;
 app.listen(port, () =>
 console.log("Server has Started..."))
