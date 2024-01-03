@@ -6,7 +6,7 @@ app.use(express.json())
 let cars = JSON.parse(fs.readFileSync("./data/cars.json"));
 
 
-// ?   GET Method
+// !   GET Method
 app.get("/api/allCars", (req, res) => {
     res.status(200).json({
         status: "success",
@@ -18,8 +18,32 @@ app.get("/api/allCars", (req, res) => {
     })
 })
 
-// ?  POST Method
 
+// ! GET Method with ID params
+app.get("/api/allCars/:id", (req, res) => {
+    const id = Number(req.params.id) 
+
+    let exactCar = cars.find(item => item.id === id);
+
+    if(!exactCar) {
+        res.status(404).json({
+            status: "fail",
+            message: `Car with id ${id} not found!`
+        })
+    }
+    
+    res.status(200).json({
+        status: "success",
+        data: {
+            cars: exactCar
+        }
+    })
+})
+
+
+
+
+// !  POST Method
 app.post("/api/allCars", (req, res) => {
     const newID = cars[cars.length - 1].id + 1;
 
